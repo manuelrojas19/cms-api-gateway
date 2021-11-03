@@ -1,15 +1,48 @@
 server:
   port: 8080
+management:
+  endpoint.gateway.enabled: true
+  endpoints.web.exposure.include: gateway
 spring:
   application:
     name: api-gateway
   zipkin:
     base-url: http://localhost:9411
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: commissions-service
+          uri: lb://commissions-service
+          predicates:
+            - Path=/api/v1/commissions*,/api/v1/commissions/*",/api/v1/employees/*/commissions*
+          filters:
+            - AuthFilter
+        - id: employees-service
+          uri: lb://employees-service
+          predicates:
+            - Path=/api/v1/employees*,/api/v1/employees/*
+          filters:
+            - AuthFilter
+        - id: cms-user-service
+          uri: lb://cms-user-service
+          predicates:
+            - Path=/api/v1/users/*,
+
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka
     fetch-registry: true
     register-with-eureka: true
+authentication-dev:
+  auth:
+    tokenSecret: myTokenSecret
+    tokenExpirationMsec: 3600000 #1 hour
+    refreshTokenExpirationMsec: 7776000000 #90 days
+    accessTokenCookieName: accessToken
+    refreshTokenCookieName: refreshToken
 
 

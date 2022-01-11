@@ -1,11 +1,11 @@
 package com.manuelr.microservices.cms.apigateway.config;
 
+import com.manuelr.cms.commons.dto.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import com.manuelr.microservices.cms.apigateway.dto.UserDto;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @Component
 @Slf4j
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
-    public static final String VALIDATE_TOKEN_URI = "http://cms-auth-server/api/v1/users/validate_token";
+    public static final String VALIDATE_TOKEN_URI = "http://cms-auth-server/api/v1/auth/validate_token";
 
     @Value("${authentication-dev.auth.accessTokenCookieName}")
     private String accessTokenCookieName;
@@ -48,7 +48,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                         System.out.println(exchange.getRequest().getHeaders());
                         exchange.getRequest()
                                 .mutate()
-                                .header("X-Auth-User", String.valueOf(userDto.getEmail()))
+                                .header("X-Auth-UserId", String.valueOf(userDto.getId()))
                                 .header("X-Auth-UserRole", String.valueOf(userDto.getRole()));
                         return exchange;
                     }).flatMap(chain::filter);

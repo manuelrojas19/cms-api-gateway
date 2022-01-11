@@ -1,9 +1,11 @@
 server:
-  port: 8080
+  port: 8090
 management:
   endpoint.gateway.enabled: true
   endpoints.web.exposure.include: gateway
 spring:
+  main:
+    web-application-type: reactive
   application:
     name: api-gateway
   zipkin:
@@ -17,19 +19,19 @@ spring:
         - id: commissions-service
           uri: lb://commissions-service
           predicates:
-            - Path=/api/v1/commissions*,/api/v1/commissions/*",/api/v1/employees/*/commissions*
+            - Path=/api/v*/commissions*,/api/v*/commissions/*,/api/v*/employees/*/commissions*,/api/v*/receipts*,/api/v*/receipts/*,/api/v*/commissions/*/receipts
           filters:
             - AuthFilter
         - id: employees-service
           uri: lb://employees-service
           predicates:
-            - Path=/api/v1/employees*,/api/v1/employees/*
+            - Path=/api/v*/employees*,/api/v*/employees/*
           filters:
             - AuthFilter
-        - id: cms-user-service
-          uri: lb://cms-user-service
+        - id: cms-auth-server
+          uri: lb://cms-auth-server
           predicates:
-            - Path=/api/v1/users/*,
+            - Path=/api/v1/auth/*,
 
 eureka:
   client:
@@ -39,10 +41,6 @@ eureka:
     register-with-eureka: true
 authentication-dev:
   auth:
-    tokenSecret: myTokenSecret
-    tokenExpirationMsec: 3600000 #1 hour
-    refreshTokenExpirationMsec: 7776000000 #90 days
     accessTokenCookieName: accessToken
-    refreshTokenCookieName: refreshToken
 
 

@@ -51,7 +51,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
     private String getJwtFromCookie(ServerHttpRequest request) {
         HttpCookie jwtCookie = request.getCookies().values().stream().flatMap(Collection::stream)
                 .filter(httpCookie -> accessTokenCookieName.equals(httpCookie.getName())).findAny()
-                .orElseThrow(() -> new RuntimeException("Missing Auth Token"));
+                .orElseThrow(() -> new IllegalArgumentException("Missing Auth Token"));
         return jwtCookie.getValue();
     }
 

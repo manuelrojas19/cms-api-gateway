@@ -19,13 +19,13 @@ spring:
         - id: commissions-service
           uri: lb://commissions-service
           predicates:
-            - Path=/api/v*/commissions*,/api/v*/commissions/*,/api/v*/employees/*/commissions*,/api/v*/receipts*,/api/v*/receipts/*,/api/v*/commissions/*/receipts
+            - Path=/api/v*/commissions*,/api/v*/commissions/*,/api/v*/employees/*/commissions*,/api/v*/receipts*,/api/v*/receipts/*,/api/v*/commissions/*/receipts,/api/v*/commissions/*/approveByManager
           filters:
             - AuthFilter
         - id: employees-service
           uri: lb://employees-service
           predicates:
-            - Path=/api/v*/employees*,/api/v*/employees/*
+            - Path=/api/v*/employees*,/api/v*/employees/*,/api/v*/managers*,/api/v*/managers/*,/api/v*/managers/*/employees*
           filters:
             - AuthFilter
         - id: cms-auth-server

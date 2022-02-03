@@ -1,0 +1,6 @@
+spring:
+  cloud:
+    discovery:
+      enabled: true
+    config:
+      service-id: cms-config-server
